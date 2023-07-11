@@ -21,6 +21,14 @@ class Db {
         this.conn.execute('INSERT INTO `users` (user_id, account, password) VALUES (?, ?, ?)', [uuidv4(), username, password])
     }
 
+    async checkUserExist(username){
+        const [rows, fields] = await this.conn.execute('SELECT account FROM users WHERE account = ?', [username]);
+        if (rows.length === 0) {
+            return false
+        }else {
+            return true
+        }
+    }    
 }
 
 export {
