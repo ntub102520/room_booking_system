@@ -10,8 +10,13 @@ const registration = async (req, res) => {
     const userName = req.body.userName
     const password = req.body.password 
     if (await DB.checkUserExist(userName)){
-        return res.status(400).json({"msg": "duplicate account!"})
-    } 
+        if (await DB.checkPassword(userName, password)){
+            return res.status(200).json({"msg": "User exists!"})
+        } else {
+            return res.status(400).json({"msg": "Password incorrect!"})
+        }
+        // return res.status(400).json({"msg": "duplicate account!"})
+    }
     
     if (validator.userNameValidator(userName) && validator.passwordValidator(password)) {
         // register into DB
@@ -22,6 +27,7 @@ const registration = async (req, res) => {
         return res.status(400).json({"msg": "Invalid input!"})
     }
 }
+
 
 export {
     registration
